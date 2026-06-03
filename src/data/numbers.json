@@ -1,0 +1,16 @@
+{
+  "description": "Number data for efya-learns. Each number pairs with a Ghanaian counting object and its Twi name. Used in the 'Count With Me' activity: count real objects first, then meet the numeral.",
+  "numbers": [
+    { "number": 0, "name": "zero", "twi": "hwee", "countObject": "empty basket", "image": "count-0.png" },
+    { "number": 1, "name": "one", "twi": "baako", "countObject": "drum", "image": "count-1.png" },
+    { "number": 2, "name": "two", "twi": "mmienu", "countObject": "plantains", "image": "count-2.png" },
+    { "number": 3, "name": "three", "twi": "mmiensa", "countObject": "cocoa pods", "image": "count-3.png" },
+    { "number": 4, "name": "four", "twi": "anan", "countObject": "kente strips", "image": "count-4.png" },
+    { "number": 5, "name": "five", "twi": "anum", "countObject": "yams", "image": "count-5.png" },
+    { "number": 6, "name": "six", "twi": "nsia", "countObject": "mangoes", "image": "count-6.png" },
+    { "number": 7, "name": "seven", "twi": "nson", "countObject": "okra", "image": "count-7.png" },
+    { "number": 8, "name": "eight", "twi": "nwotwe", "countObject": "beads", "image": "count-8.png" },
+    { "number": 9, "name": "nine", "twi": "nkron", "countObject": "shells", "image": "count-9.png" },
+    { "number": 10, "name": "ten", "twi": "du", "countObject": "stars", "image": "count-10.png" }
+  ]
+}
