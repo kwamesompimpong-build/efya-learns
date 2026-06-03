@@ -1,0 +1,31 @@
+{
+  "description": "Letter data for efya-learns. Each letter pairs with a Ghanaian-themed example word and a Twi note where helpful. Pre-reader friendly: words are spoken aloud in the app.",
+  "letters": [
+    { "letter": "A", "sound": "ah", "exampleWord": "Akwaaba", "exampleMeaning": "Welcome (Twi greeting)", "image": "akwaaba.png" },
+    { "letter": "B", "sound": "buh", "exampleWord": "Banku", "exampleMeaning": "A Ghanaian dish", "image": "banku.png" },
+    { "letter": "C", "sound": "kuh", "exampleWord": "Cocoa", "exampleMeaning": "Ghana grows cocoa", "image": "cocoa.png" },
+    { "letter": "D", "sound": "duh", "exampleWord": "Drum", "exampleMeaning": "Talking drum", "image": "drum.png" },
+    { "letter": "E", "sound": "eh", "exampleWord": "Efya", "exampleMeaning": "Our learner!", "image": "efya.png" },
+    { "letter": "F", "sound": "fuh", "exampleWord": "Fufu", "exampleMeaning": "A Ghanaian dish", "image": "fufu.png" },
+    { "letter": "G", "sound": "guh", "exampleWord": "Ghana", "exampleMeaning": "Efya's heritage", "image": "ghana.png" },
+    { "letter": "H", "sound": "huh", "exampleWord": "Highlife", "exampleMeaning": "Music to dance to", "image": "highlife.png" },
+    { "letter": "I", "sound": "ih", "exampleWord": "Igloo", "exampleMeaning": "A snow house", "image": "igloo.png" },
+    { "letter": "J", "sound": "juh", "exampleWord": "Jollof", "exampleMeaning": "Jollof rice", "image": "jollof.png" },
+    { "letter": "K", "sound": "kuh", "exampleWord": "Kente", "exampleMeaning": "Woven cloth", "image": "kente.png" },
+    { "letter": "L", "sound": "luh", "exampleWord": "Lion", "exampleMeaning": "A brave animal", "image": "lion.png" },
+    { "letter": "M", "sound": "muh", "exampleWord": "Maame", "exampleMeaning": "Mother (Twi)", "image": "maame.png" },
+    { "letter": "N", "sound": "nuh", "exampleWord": "Nana", "exampleMeaning": "Grandparent/chief", "image": "nana.png" },
+    { "letter": "O", "sound": "oh", "exampleWord": "Okra", "exampleMeaning": "A vegetable", "image": "okra.png" },
+    { "letter": "P", "sound": "puh", "exampleWord": "Plantain", "exampleMeaning": "A tasty fruit", "image": "plantain.png" },
+    { "letter": "Q", "sound": "kwuh", "exampleWord": "Queen", "exampleMeaning": "A royal leader", "image": "queen.png" },
+    { "letter": "R", "sound": "ruh", "exampleWord": "Rice", "exampleMeaning": "For jollof!", "image": "rice.png" },
+    { "letter": "S", "sound": "suh", "exampleWord": "Sankofa", "exampleMeaning": "An Adinkra symbol", "image": "sankofa.png" },
+    { "letter": "T", "sound": "tuh", "exampleWord": "Talking drum", "exampleMeaning": "Makes rhythms", "image": "talkingdrum.png" },
+    { "letter": "U", "sound": "uh", "exampleWord": "Umbrella", "exampleMeaning": "For the rain", "image": "umbrella.png" },
+    { "letter": "V", "sound": "vuh", "exampleWord": "Village", "exampleMeaning": "Where people live", "image": "village.png" },
+    { "letter": "W", "sound": "wuh", "exampleWord": "Water", "exampleMeaning": "We drink water", "image": "water.png" },
+    { "letter": "X", "sound": "ks", "exampleWord": "Xylophone", "exampleMeaning": "Gyil, a Ghanaian xylophone", "image": "gyil.png" },
+    { "letter": "Y", "sound": "yuh", "exampleWord": "Yam", "exampleMeaning": "A root vegetable", "image": "yam.png" },
+    { "letter": "Z", "sound": "zuh", "exampleWord": "Zebra", "exampleMeaning": "Black and white stripes", "image": "zebra.png" }
+  ]
+}
