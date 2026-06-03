@@ -38,7 +38,36 @@ Help Efya (E-F-Y-A), age 3, joyfully recognize letters (A–Z) and numbers (0–
 | Count With Me | Counting, quantity | Concrete objects (heritage) |
 | Dance & Jump | Number/letter reinforcement | Movement |
 | Quiet Corner | Calm observation | Reserved/observant side |
+| Dreamland | Bedtime / sleep habit | All of the above, at night |
 | Efya's Choice | Self-direction | Headstrong, autonomy |
+
+### Dreamland — sleeping in her own bed
+
+A bedtime feature to help Efya sleep through the night in her own room (she
+currently comes into her parents' room around 12–2am). It uses the same calm,
+no-pressure, heritage-rooted language as the rest of the app, applied to a real
+parenting goal. Two parts:
+
+- **Wind-down ("Time for bed")** — a night-palette scene with a soft synthesized
+  lullaby and spoken affirmations. The affirmations deliberately reframe each of
+  Efya's traits as the *reason* she can do this: brave ("your own bed is a cozy
+  adventure ship"), strong/headstrong ("you can do hard things, all by
+  yourself"), observant ("the stars are watching over you"), and pink-loving
+  ("snuggle under your soft pink blanket"). Ends in a quiet "Good night / Da yie".
+- **Morning star chart ("My sleep stars")** — positive reinforcement. Each
+  morning Efya stayed in her own bed, she taps to earn an Adinkra "sleep star"
+  (e.g. *Dwennimmen* — strength, *Fawohodie* — independence). A rolling 7-night
+  chart plus streak cheers make her own pride the reward.
+
+Design rules for Dreamland:
+
+- **Only celebrate wins.** Rough nights are skipped silently — never a red mark,
+  never scolding. The chart cannot show failure.
+- **Parent-paired, child-led.** A small grown-up note frames each screen; Efya
+  does the tapping so the win feels like hers.
+- **On-device only.** Streaks live in `localStorage`; nothing leaves the tablet.
+- **Backed by what works for toddlers:** consistent wind-down routine, a calm
+  sensory environment, and a visible reward chart driven by the child's autonomy.
 
 ## 4. Visual & Audio Style
 
@@ -63,12 +92,29 @@ Help Efya (E-F-Y-A), age 3, joyfully recognize letters (A–Z) and numbers (0–
 - No in-app purchases, ads, or outbound links.
 - Calm volume defaults and a mute option.
 
-## 7. Open Questions
+## 7. Platform & Implementation (v1)
 
-- Which platform first (tablet web, native iOS/Android)?
+- **Platform:** tablet-first **web app** — plain HTML/CSS/JS, no framework, no
+  build step. Opens straight from `src/index.html`; can be added to the tablet
+  home screen for a full-screen feel.
+- **Audio:** Web Speech API for spoken letters/numbers/affirmations (pre-reader
+  friendly, no recorded files yet); Web Audio API for gentle chimes, a drum tap,
+  and the Dreamland lullaby.
+- **Art:** emoji + CSS/SVG stand-ins so the app runs with zero image assets.
+  Real Adinkra/kente artwork and recorded Twi audio can replace these later
+  without changing the activity logic.
+- **Data:** `data/content.js` is the runtime content (a JS mirror of the
+  `letters.json` / `numbers.json` / `dreamland.json` specs) so everything loads
+  from `file://` without a server.
+
+## 8. Open Questions
+
 - How many Twi words to introduce in v1?
 - Should letters be taught in alphabetical order or by sound frequency?
+- Grow numbers from 0–10 to 0–20 now, or after first playtests?
 
-## 8. Next Steps
+## 9. Next Steps
 
-See the roadmap in the main README. First prototypes: Trace & Feel and Count With Me.
+The five activities and Dreamland are built and runnable. Next: replace emoji
+stand-ins with real Adinkra/kente artwork and recorded Twi audio, then playtest
+with Efya and iterate on what delights her. See the roadmap in the main README.
