@@ -58,36 +58,50 @@ To match how Efya is learning at her Montessori school:
 - Count real objects and match quantities to numerals.
 - Trace letter and number shapes to build pre-writing skills.
 
-## Planned Features
+## Features
 
-- **Letter & Number Garden** — an explorable, pink-accented world where each letter and number lives.
-- **Trace & Feel** — finger-tracing of letters and numbers, Montessori sandpaper-letter style.
-- **Count With Me** — counting Ghanaian objects (cocoa pods, drums, plantains) before meeting the numeral.
-- **Dance & Jump** — movement breaks where Efya jumps the number of times shown or dances out a letter.
-- **Quiet Corner** — a calm observation space with gentle animations and sounds, no tasks required.
-- **Efya's Choice** — open navigation so she decides what to explore next.
+The app is built and runnable today — a dependency-free web app. Open
+`src/index.html` in a browser (best on a tablet) and play; there's no install,
+build step, or server. See [`src/README.md`](src/README.md) for how it works.
+
+- **Letters (Trace & Feel)** ✅ — meet each letter A–Z with a Ghanaian example
+  word, hear it spoken, and finger-trace its shape (Montessori sandpaper style).
+- **Count With Me** ✅ — tap to count Ghanaian objects, then meet the numeral and
+  its Twi name. Concrete before abstract.
+- **Dance & Jump** ✅ — a number appears and Efya jumps that many times, counted
+  aloud over a drum beat.
+- **Quiet Corner** ✅ — a calm, no-task space with floating Adinkra stars and a
+  slow "breathe" guide, for her reserved, observant side.
+- **Dreamland** ✅ — a bedtime feature to help Efya sleep in her own bed all
+  night: a calming wind-down (lullaby + personality-tuned affirmations) and a
+  morning Adinkra "sleep star" chart that rewards every night she stays in her
+  own room.
+- **Efya's Choice** ✅ — open home navigation plus letter/number quick-picks, so
+  she decides what to explore next and goes her own way.
 
 ## Project Structure (Planned)
 
 ```
 efya-learns/
-├── docs/            # Design notes, learning goals, and feature specs
-├── src/             # Application source code
-│   ├── assets/      # Art, audio, Adinkra symbols, kente patterns
-│   ├── components/  # Reusable UI building blocks
-│   ├── activities/  # Letter, number, tracing, and movement activities
-│   └── data/        # Letters, numbers, Ghanaian word/object lists
+├── docs/             # Design notes, learning goals, and feature specs
+├── src/              # Application source code (runnable web app)
+│   ├── index.html    # Open this to play
+│   ├── styles.css    # Pink-forward, kente-accented styling + night mode
+│   ├── app.js        # All activity logic (vanilla JS, no build step)
+│   └── data/         # content.js (runtime) + letters/numbers/dreamland specs
 └── README.md
 ```
 
 ## Roadmap
 
-- [ ] Define the visual style guide (pink-forward, kente-inspired palette).
-- [ ] Build the letter and number data set with Ghanaian examples.
-- [ ] Prototype the Trace & Feel activity.
-- [ ] Prototype Count With Me.
-- [ ] Add a movement activity (Dance & Jump).
-- [ ] Add the Quiet Corner observation mode.
+- [x] Define the visual style guide (pink-forward, kente-inspired palette).
+- [x] Build the letter and number data set with Ghanaian examples.
+- [x] Prototype the Trace & Feel activity.
+- [x] Prototype Count With Me.
+- [x] Add a movement activity (Dance & Jump).
+- [x] Add the Quiet Corner observation mode.
+- [x] Add Dreamland, the bedtime / sleep-in-her-own-bed feature.
+- [ ] Replace emoji stand-ins with real Adinkra/kente artwork and recorded audio.
 - [ ] Playtest with Efya and iterate based on what delights her.
 
 ## A Note

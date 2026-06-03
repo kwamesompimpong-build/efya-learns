@@ -1,0 +1,300 @@
+/* =========================================================================
+   efya-learns — styles
+   Pink-forward palette with kente-inspired accents (gold, green, red).
+   Big, rounded, high-contrast targets for small hands on a tablet.
+   A calm "night" mode (.night on <body>) is used by Quiet Corner & Dreamland.
+   ========================================================================= */
+
+:root {
+  /* Pink leads. */
+  --pink-100: #fff0f6;
+  --pink-200: #ffd6e8;
+  --pink-300: #ffabd1;
+  --pink-400: #ff7fb8;
+  --pink-500: #ff5fa2;
+  --pink-600: #e63e86;
+
+  /* Kente-inspired supporting colors. */
+  --gold: #f4b400;
+  --green: #1e8e5a;
+  --red: #d2352c;
+  --ink: #3a1f2d;        /* warm near-black for text */
+
+  --night-1: #1b1030;    /* deep indigo for bedtime */
+  --night-2: #2a1850;
+  --night-text: #ffe7f3;
+
+  --radius: 28px;
+  --shadow: 0 10px 30px rgba(230, 62, 134, 0.25);
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  font-family: "Baloo 2", "Comic Sans MS", "Trebuchet MS", system-ui, sans-serif;
+  color: var(--ink);
+  background: var(--pink-100);
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+#app {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+  position: relative;
+}
+
+/* Kente stripe band used as a decorative accent on screens. */
+.kente {
+  height: 14px;
+  width: 100%;
+  max-width: 720px;
+  border-radius: 999px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--gold) 0 22px, var(--green) 22px 44px,
+    var(--red) 44px 66px, var(--ink) 66px 70px, var(--pink-500) 70px 92px
+  );
+  margin: 10px 0 26px;
+}
+
+/* ---- Typography ---- */
+h1.title { font-size: clamp(28px, 6vw, 52px); margin: 6px 0; color: var(--pink-600); }
+.subtitle { font-size: clamp(16px, 3.5vw, 24px); color: var(--ink); opacity: .8; margin: 0 0 6px; }
+
+/* ---- Home menu ---- */
+.menu {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(150px, 1fr));
+  gap: 18px;
+  width: 100%;
+  max-width: 720px;
+}
+.menu .tile { grid-column: span 1; }
+
+.tile {
+  border: none;
+  cursor: pointer;
+  border-radius: var(--radius);
+  padding: 22px 14px;
+  background: white;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  transition: transform .12s ease;
+  color: var(--ink);
+}
+.tile:active { transform: scale(0.94); }
+.tile .ic { font-size: clamp(40px, 9vw, 64px); line-height: 1; }
+.tile .lb { font-size: clamp(16px, 3.5vw, 22px); font-weight: 700; }
+.tile.pinky { background: linear-gradient(160deg, var(--pink-300), var(--pink-500)); color: white; }
+.tile.night-tile { background: linear-gradient(160deg, var(--night-2), var(--night-1)); color: var(--night-text); }
+
+/* ---- Generic big round buttons ---- */
+.btn {
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 800;
+  border-radius: 999px;
+  padding: 16px 26px;
+  font-size: clamp(16px, 4vw, 22px);
+  background: var(--pink-500);
+  color: white;
+  box-shadow: var(--shadow);
+  transition: transform .12s ease;
+}
+.btn:active { transform: scale(0.93); }
+.btn.ghost { background: white; color: var(--pink-600); }
+.btn.round { width: 84px; height: 84px; padding: 0; font-size: 38px; }
+
+.row { display: flex; gap: 16px; align-items: center; justify-content: center; flex-wrap: wrap; }
+
+/* Back / home button, top-left on activity screens. */
+.back {
+  position: absolute;
+  top: 16px; left: 16px;
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  border: none;
+  background: white;
+  color: var(--pink-600);
+  font-size: 30px;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+}
+.back:active { transform: scale(0.9); }
+
+/* ---- Big card for letters / numbers ---- */
+.bigchar {
+  font-size: clamp(120px, 38vw, 300px);
+  font-weight: 900;
+  color: var(--pink-600);
+  line-height: 1;
+}
+.emoji-xl { font-size: clamp(70px, 22vw, 160px); line-height: 1; }
+.word { font-size: clamp(24px, 6vw, 44px); font-weight: 800; color: var(--ink); }
+.meaning { font-size: clamp(15px, 3.5vw, 22px); opacity: .75; }
+.twi { color: var(--green); font-weight: 800; }
+
+/* ---- Trace canvas ---- */
+.trace-wrap { position: relative; width: min(70vw, 360px); height: min(70vw, 360px); }
+.trace-ghost {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: min(64vw, 320px); font-weight: 900;
+  color: var(--pink-200);
+  pointer-events: none;
+}
+#traceCanvas {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  border-radius: var(--radius);
+  background: white;
+  box-shadow: var(--shadow);
+  touch-action: none;
+}
+
+/* ---- Count With Me objects ---- */
+.objects {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  align-items: center; justify-content: center;
+  max-width: 640px; margin: 4px auto 0;
+}
+.obj {
+  font-size: clamp(40px, 11vw, 72px);
+  cursor: pointer;
+  transition: transform .12s ease;
+  filter: grayscale(0.15) opacity(0.55);
+}
+.obj.counted { filter: none; transform: scale(1.12); }
+.count-badge {
+  font-size: clamp(60px, 16vw, 120px);
+  font-weight: 900; color: var(--gold);
+  min-height: 1.1em;
+}
+
+/* ---- Dance & Jump ---- */
+.dancer { font-size: clamp(90px, 28vw, 200px); display: inline-block; }
+.dancer.go { animation: bounce .5s ease-in-out infinite; }
+@keyframes bounce {
+  0%, 100% { transform: translateY(0) rotate(-4deg); }
+  50% { transform: translateY(-26px) rotate(4deg); }
+}
+.jump-count { font-size: clamp(50px, 14vw, 110px); font-weight: 900; color: var(--pink-600); }
+
+/* ---- Celebration overlay ---- */
+.celebrate {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: clamp(80px, 24vw, 180px);
+  pointer-events: none;
+  animation: pop .7s ease;
+}
+@keyframes pop {
+  0% { transform: scale(.3); opacity: 0; }
+  50% { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.confetti {
+  position: absolute; top: -10vh; font-size: 26px;
+  animation: fall linear forwards;
+  pointer-events: none;
+}
+@keyframes fall {
+  to { transform: translateY(120vh) rotate(360deg); opacity: .9; }
+}
+
+/* ---- Night mode (Quiet Corner & Dreamland) ---- */
+body.night { background: radial-gradient(circle at 50% 30%, var(--night-2), var(--night-1)); }
+body.night #app { color: var(--night-text); }
+body.night .word, body.night .title, body.night h1.title { color: var(--night-text); }
+body.night .back, body.night .sound-toggle { background: rgba(255,255,255,.12); color: var(--night-text); }
+
+.calm-scene { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.floaty { position: absolute; font-size: 30px; opacity: .8; animation: drift linear infinite; }
+@keyframes drift {
+  from { transform: translateY(105vh) translateX(0); }
+  to { transform: translateY(-15vh) translateX(20px); }
+}
+/* Slow "breathe" guide for the Quiet Corner. */
+.breathe { font-size: clamp(90px, 26vw, 180px); animation: breathe 8s ease-in-out infinite; }
+@keyframes breathe {
+  0%, 100% { transform: scale(.85); opacity: .8; }
+  50% { transform: scale(1.1); opacity: 1; }
+}
+.breathe-label { font-size: clamp(18px, 4vw, 26px); opacity: .85; margin-top: 10px; }
+
+/* ---- Dreamland star chart ---- */
+.chart {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+  width: 100%; max-width: 520px;
+  margin: 18px auto;
+}
+.star-slot {
+  aspect-ratio: 1;
+  border-radius: 18px;
+  background: rgba(255,255,255,.1);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  font-size: clamp(22px, 7vw, 40px);
+  color: var(--night-text);
+}
+.star-slot.earned { background: linear-gradient(160deg, var(--gold), var(--pink-500)); color: white; }
+.star-slot .day { font-size: 11px; opacity: .7; margin-top: 2px; }
+.streak { font-size: clamp(18px, 4vw, 24px); color: var(--gold); font-weight: 800; }
+
+/* The pink guide tucked into her own bed during wind-down. */
+.bedscene { font-size: clamp(80px, 24vw, 160px); margin: 10px 0; }
+.parent-note {
+  font-size: 13px; opacity: .6; max-width: 480px;
+  margin: 18px auto 0; line-height: 1.4;
+}
+
+/* ---- Sound toggle ---- */
+.sound-toggle {
+  position: fixed;
+  top: 16px; right: 16px;
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  border: none;
+  background: white;
+  font-size: 24px;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  z-index: 50;
+}
+.sound-toggle:active { transform: scale(0.9); }
+
+/* Letter/number quick-pick grid (Efya's headstrong "her way" choice). */
+.pickgrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(54px, 1fr));
+  gap: 8px;
+  width: 100%; max-width: 640px;
+  margin-top: 16px;
+}
+.pick {
+  border: none; cursor: pointer;
+  background: var(--pink-200);
+  color: var(--pink-600);
+  font-weight: 800;
+  border-radius: 14px;
+  padding: 12px 0;
+  font-size: 20px;
+}
+.pick:active { transform: scale(0.9); }

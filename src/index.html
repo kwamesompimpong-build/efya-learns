@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#ff5fa2" />
+  <title>Efya Learns 🌸</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- The whole app renders into #app. One screen is visible at a time. -->
+  <main id="app" aria-live="polite"></main>
+
+  <!-- Floating sound toggle, present on every screen. -->
+  <button id="soundToggle" class="sound-toggle" title="Sound on/off" aria-label="Sound on or off">🔊</button>
+
+  <!-- Content first so window.EFYA exists before app.js runs. -->
+  <script src="data/content.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+{
+  "description": "Data spec for Dreamland, the bedtime feature that gently encourages Efya to sleep in her own bed all night. Based on positive reinforcement: a calming wind-down (lullaby + affirmations) and a morning star chart. This is the readable data spec; the app reads the runtime mirror in content.js. Affirmations lean on Efya's own personality so her traits become the reason she can do this.",
+  "stars": [
+    { "symbol": "✦", "adinkra": "Dwennimmen", "meaning": "strength — strong and brave like a ram" },
+    { "symbol": "❤", "adinkra": "Akoma", "meaning": "patience — a calm, patient heart" },
+    { "symbol": "✺", "adinkra": "Nyame Dua", "meaning": "you are safe and watched over" },
+    { "symbol": "↺", "adinkra": "Sankofa", "meaning": "morning always comes back" },
+    { "symbol": "✶", "adinkra": "Gye Nyame", "meaning": "nothing to fear in the dark" },
+    { "symbol": "❉", "adinkra": "Fawohodie", "meaning": "independence — you did it yourself" },
+    { "symbol": "✸", "adinkra": "Nkyinkyim", "meaning": "you are growing so big" }
+  ],
+  "affirmations": [
+    "Akwaaba to Dreamland, Efya.",
+    "Efya is brave. Her own bed is a cozy adventure ship sailing to morning.",
+    "Efya is strong and can do hard things, all by herself.",
+    "Efya snuggles under her soft pink blanket.",
+    "Efya's room is calm and safe. The stars are watching over her.",
+    "If Efya wakes up, she gives her pillow a squeeze and stays in her own big-girl bed.",
+    "In the morning, the sun says good morning and Efya earns a star.",
+    "Good night, brave girl. Da yie — sleep well."
+  ],
+  "morningCheers": [
+    "Maakye, Efya! Good morning!",
+    "You stayed in your own bed all night. You are so strong!",
+    "Here is your Adinkra star. You earned it.",
+    "Fawohodie — you did it all by yourself!"
+  ],
+  "streakCheers": {
+    "3": "Three nights in a row! Efya is a Dreamland champion!",
+    "5": "Five stars! Your sleep chart is shining!",
+    "7": "A whole week of stars! Efya sleeps in her own bed like a big girl!"
+  }
+}
