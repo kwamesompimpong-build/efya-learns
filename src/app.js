@@ -34,6 +34,9 @@
     if (!soundOn || !("speechSynthesis" in window)) return;
     opts = opts || {};
     try {
+      // Cancel anything still speaking/queued so utterances never overlap or
+      // echo (rapid taps would otherwise stack on top of each other).
+      window.speechSynthesis.cancel();
       var u = new SpeechSynthesisUtterance(text);
       u.rate = opts.rate || 0.85;   // calm, clear pace for a pre-reader
       u.pitch = opts.pitch || 1.15; // warm, friendly
@@ -227,8 +230,10 @@
     }
 
     function sayLetter(L) {
-      // "B. Buh. B is for Banku." — letter, sound, then the Ghanaian word.
-      speak(L.letter + ". " + L.sound + ". " + L.letter + " is for " + L.word + ".");
+      // Say the letter name once, then its sound, then the Ghanaian word —
+      // e.g. "B. Buh. Is for Banku." Repeating the letter made it sound like
+      // each one was spoken twice, so the name appears only once.
+      speak(L.letter + ". " + L.sound + ". Is for " + L.word + ".");
     }
 
     show();
@@ -284,7 +289,7 @@
     clearBtn.addEventListener("click", function () { ctx.clearRect(0, 0, canvas.width, canvas.height); });
     doneBtn.addEventListener("click", function () {
       celebrate("🌟");
-      speak("You traced the letter " + L.letter + "! " + L.letter + " is for " + L.word + ".");
+      speak("You traced the letter " + L.letter + "! It is for " + L.word + ".");
     });
 
     speak("Trace the letter " + L.letter + " with your finger.");
@@ -363,7 +368,9 @@
       var badge = wrap.firstChild;
       badge.textContent = N.number;
       if (!quiet) celebrate(N.number === 0 ? "🧺" : "⭐");
-      speak(N.number + ". " + N.name + ". In Twi, " + N.twi + ".");
+      // The numeral is shown on screen; spoken aloud we say its name once (the
+      // digit would be read as the same word, sounding doubled), then the Twi.
+      speak(N.name + ". In Twi, " + N.twi + ".");
       var line = el("div", "meaning");
       line.innerHTML = "This is the number <b>" + N.number + "</b> — " +
         N.name + " (<span class='twi'>" + N.twi + "</span> in Twi).";
