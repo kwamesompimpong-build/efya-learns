@@ -30,6 +30,33 @@
   // Audio: spoken words (Speech Synthesis) + gentle tones (Web Audio).
   // Both are pre-reader-friendly and fail silently if unsupported.
   // ---------------------------------------------------------------------
+
+  // Pick a woman's English voice. The voice list loads asynchronously, so we
+  // (re)resolve it whenever the browser reports it changed. We prefer voices
+  // that name themselves female, then known female voice names, then any
+  // English voice as a fallback.
+  var chosenVoice = null;
+  function pickVoice() {
+    if (!("speechSynthesis" in window)) return;
+    var voices = window.speechSynthesis.getVoices() || [];
+    if (!voices.length) return;
+    var english = voices.filter(function (v) { return /^en(-|_|$)/i.test(v.lang); });
+    var pool = english.length ? english : voices;
+
+    // Names commonly used for female system voices across browsers/OSes.
+    var femaleNames = /(female|woman|samantha|victoria|karen|moira|tessa|fiona|serena|allison|ava|susan|zira|hazel|catherine|google us english|google uk english female|aria|jenny|michelle|nicky|joanna|kendra|salli|kimberly|amy|emma)/i;
+
+    chosenVoice =
+      pool.find(function (v) { return femaleNames.test(v.name); }) ||
+      pool.find(function (v) { return /female/i.test(v.voiceURI || ""); }) ||
+      pool[0] ||
+      null;
+  }
+  if ("speechSynthesis" in window) {
+    pickVoice();
+    window.speechSynthesis.onvoiceschanged = pickVoice;
+  }
+
   function speak(text, opts) {
     if (!soundOn || !("speechSynthesis" in window)) return;
     opts = opts || {};
@@ -37,10 +64,12 @@
       // Cancel anything still speaking/queued so utterances never overlap or
       // echo (rapid taps would otherwise stack on top of each other).
       window.speechSynthesis.cancel();
+      if (!chosenVoice) pickVoice(); // voices may have arrived late
       var u = new SpeechSynthesisUtterance(text);
+      if (chosenVoice) u.voice = chosenVoice;
       u.rate = opts.rate || 0.85;   // calm, clear pace for a pre-reader
-      u.pitch = opts.pitch || 1.15; // warm, friendly
-      u.lang = "en-US";
+      u.pitch = opts.pitch || 1.2;  // warm, friendly, a touch higher
+      u.lang = (chosenVoice && chosenVoice.lang) || "en-US";
       window.speechSynthesis.speak(u);
     } catch (e) { /* ignore */ }
   }
