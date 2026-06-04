@@ -57,6 +57,15 @@
     window.speechSynthesis.onvoiceschanged = pickVoice;
   }
 
+  // Text-to-speech guesses pronunciation from spelling and gets "Efya" wrong.
+  // We keep the name spelled "Efya" on screen but feed the speech engine a
+  // phonetic respelling so it says "Ef-ee-ah". Tweak SPOKEN_NAME if a
+  // particular device's voice still says it oddly.
+  var SPOKEN_NAME = "Eff-ee-ah";
+  function forSpeech(text) {
+    return String(text).replace(/\bEfya\b/gi, SPOKEN_NAME);
+  }
+
   function speak(text, opts) {
     if (!soundOn || !("speechSynthesis" in window)) return;
     opts = opts || {};
@@ -65,7 +74,7 @@
       // echo (rapid taps would otherwise stack on top of each other).
       window.speechSynthesis.cancel();
       if (!chosenVoice) pickVoice(); // voices may have arrived late
-      var u = new SpeechSynthesisUtterance(text);
+      var u = new SpeechSynthesisUtterance(forSpeech(text));
       if (chosenVoice) u.voice = chosenVoice;
       u.rate = opts.rate || 0.85;   // calm, clear pace for a pre-reader
       u.pitch = opts.pitch || 1.2;  // warm, friendly, a touch higher
