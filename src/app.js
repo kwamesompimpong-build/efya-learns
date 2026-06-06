@@ -286,7 +286,12 @@
     app.appendChild(el("div", "word", "Trace the letter " + L.letter));
 
     var wrap = el("div", "trace-wrap");
-    var ghost = el("div", "trace-ghost", L.letter);
+    // The guide letter is a dotted outline (like a handwriting worksheet) that
+    // Efya traces over. It's an SVG so the dashes follow the letter's shape.
+    var ghost = el("div", "trace-ghost");
+    ghost.innerHTML =
+      '<svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" aria-hidden="true">' +
+      '<text x="50" y="76" text-anchor="middle">' + L.letter + '</text></svg>';
     var canvas = document.createElement("canvas");
     canvas.id = "traceCanvas";
     wrap.appendChild(ghost);
@@ -330,7 +335,7 @@
       speak("You traced the letter " + L.letter + "! It is for " + L.word + ".");
     });
 
-    speak("Trace the letter " + L.letter + " with your finger.");
+    speak("Trace the dotted letter " + L.letter + " with your finger.");
   }
 
   // ---------------------------------------------------------------------
