@@ -182,6 +182,29 @@
     setTimeout(function () { c.remove(); }, 1200);
   }
 
+  // Warm, varied praise — including the Akan "Ayekoo!" ("well done") — spoken
+  // when Efya genuinely completes something.
+  var PRAISE = [
+    "Ayekoo! Well done!",
+    "Hurray! You did it!",
+    "Wonderful, Efya!",
+    "You are so clever!",
+    "Brilliant! Well done, Efya!",
+    "Yoo! Beautiful work!",
+    "Look at you go!",
+    "I am so proud of you!"
+  ];
+  function pickPraise() { return PRAISE[Math.floor(Math.random() * PRAISE.length)]; }
+
+  // Called when Efya gets something right: celebrate, speak an affirmation plus
+  // a specific line, then advance to the next thing so the game keeps flowing.
+  // The advance waits long enough for the praise to be heard.
+  function succeed(message, advanceFn, symbol) {
+    celebrate(symbol || "🌟");
+    speak(pickPraise() + " " + message);
+    setTimeout(function () { if (advanceFn) advanceFn(); }, 3400);
+  }
+
   function dayMode() { document.body.classList.remove("night"); }
   function nightMode() { document.body.classList.add("night"); }
 
@@ -368,9 +391,12 @@
           render();
           return;
         }
-        celebrate("🌟");
-        speak("You traced the big " + upper + " and the little " + lower +
-          "! " + upper + " is for " + L.word + ".");
+        // Both forms traced — affirm, then advance to the next letter.
+        if (stopMouseUp) stopMouseUp();
+        var nextIdx = (returnIdx + 1) % EFYA.letters.length;
+        succeed("You traced the big " + upper + " and the little " + lower +
+          "! " + upper + " is for " + L.word + ".",
+          function () { letters(nextIdx); }, "🌟");
       });
 
       speak("Trace " + f.spoken + " with your finger.");
@@ -451,14 +477,19 @@
       // Meet the numeral after counting the real objects.
       var badge = wrap.firstChild;
       badge.textContent = N.number;
-      if (!quiet) celebrate(N.number === 0 ? "🧺" : "⭐");
-      // The numeral is shown on screen; spoken aloud we say its name once (the
-      // digit would be read as the same word, sounding doubled), then the Twi.
-      speak(N.name + ". In Twi, " + N.twi + ".");
       var line = el("div", "meaning");
       line.innerHTML = "This is the number <b>" + N.number + "</b> — " +
         N.name + " (<span class='twi'>" + N.twi + "</span> in Twi).";
       wrap.insertBefore(line, wrap.children[2]);
+
+      // The quiet path is the zero screen (nothing to count) — just name it.
+      if (quiet) { speak(N.name + ". In Twi, " + N.twi + "."); return; }
+
+      // She counted them all — affirm, then advance to the next number.
+      var nextIdx = (idx + 1) % data.length;
+      succeed("You counted " + N.number + " " + N.object + "! That is " +
+        N.name + ", " + N.twi + " in Twi.",
+        function () { idx = nextIdx; show(); }, "⭐");
     }
 
     show();
@@ -508,8 +539,8 @@
       if (done === target) {
         setTimeout(function () {
           dancer.classList.remove("go");
-          celebrate("🎉");
-          speak("You jumped " + target + " times! Hurray!");
+          // Reached the target — affirm, then advance to a fresh number.
+          succeed("You jumped " + target + " times!", newRound, "🎉");
         }, 350);
       }
     }
