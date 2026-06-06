@@ -30,14 +30,55 @@
   // Audio: spoken words (Speech Synthesis) + gentle tones (Web Audio).
   // Both are pre-reader-friendly and fail silently if unsupported.
   // ---------------------------------------------------------------------
+
+  // Pick a woman's English voice. The voice list loads asynchronously, so we
+  // (re)resolve it whenever the browser reports it changed. We prefer voices
+  // that name themselves female, then known female voice names, then any
+  // English voice as a fallback.
+  var chosenVoice = null;
+  function pickVoice() {
+    if (!("speechSynthesis" in window)) return;
+    var voices = window.speechSynthesis.getVoices() || [];
+    if (!voices.length) return;
+    var english = voices.filter(function (v) { return /^en(-|_|$)/i.test(v.lang); });
+    var pool = english.length ? english : voices;
+
+    // Names commonly used for female system voices across browsers/OSes.
+    var femaleNames = /(female|woman|samantha|victoria|karen|moira|tessa|fiona|serena|allison|ava|susan|zira|hazel|catherine|google us english|google uk english female|aria|jenny|michelle|nicky|joanna|kendra|salli|kimberly|amy|emma)/i;
+
+    chosenVoice =
+      pool.find(function (v) { return femaleNames.test(v.name); }) ||
+      pool.find(function (v) { return /female/i.test(v.voiceURI || ""); }) ||
+      pool[0] ||
+      null;
+  }
+  if ("speechSynthesis" in window) {
+    pickVoice();
+    window.speechSynthesis.onvoiceschanged = pickVoice;
+  }
+
+  // Text-to-speech guesses pronunciation from spelling and gets "Efya" wrong.
+  // We keep the name spelled "Efya" on screen but feed the speech engine a
+  // phonetic respelling so it says "Ef-ee-ah". Tweak SPOKEN_NAME if a
+  // particular device's voice still says it oddly.
+  var SPOKEN_NAME = "Eff-ee-ah";
+  function forSpeech(text) {
+    return String(text).replace(/\bEfya\b/gi, SPOKEN_NAME);
+  }
+
   function speak(text, opts) {
     if (!soundOn || !("speechSynthesis" in window)) return;
     opts = opts || {};
     try {
-      var u = new SpeechSynthesisUtterance(text);
+      // Cancel anything still speaking/queued so utterances never overlap or
+      // echo (rapid taps would otherwise stack on top of each other).
+      window.speechSynthesis.cancel();
+      if (!chosenVoice) pickVoice(); // voices may have arrived late
+      var u = new SpeechSynthesisUtterance(forSpeech(text));
+      if (chosenVoice) u.voice = chosenVoice;
       u.rate = opts.rate || 0.85;   // calm, clear pace for a pre-reader
-      u.pitch = opts.pitch || 1.15; // warm, friendly
-      u.lang = "en-US";
+      u.pitch = opts.pitch || 1.2;  // warm, friendly, a touch higher
+      u.lang = (chosenVoice && chosenVoice.lang) || "en-US";
       window.speechSynthesis.speak(u);
     } catch (e) { /* ignore */ }
   }
@@ -227,8 +268,10 @@
     }
 
     function sayLetter(L) {
-      // "B. Buh. B is for Banku." — letter, sound, then the Ghanaian word.
-      speak(L.letter + ". " + L.sound + ". " + L.letter + " is for " + L.word + ".");
+      // Say the letter name once, then its sound, then the Ghanaian word —
+      // e.g. "B. Buh. Is for Banku." Repeating the letter made it sound like
+      // each one was spoken twice, so the name appears only once.
+      speak(L.letter + ". " + L.sound + ". Is for " + L.word + ".");
     }
 
     show();
@@ -243,7 +286,12 @@
     app.appendChild(el("div", "word", "Trace the letter " + L.letter));
 
     var wrap = el("div", "trace-wrap");
-    var ghost = el("div", "trace-ghost", L.letter);
+    // The guide letter is a dotted outline (like a handwriting worksheet) that
+    // Efya traces over. It's an SVG so the dashes follow the letter's shape.
+    var ghost = el("div", "trace-ghost");
+    ghost.innerHTML =
+      '<svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" aria-hidden="true">' +
+      '<text x="50" y="76" text-anchor="middle">' + L.letter + '</text></svg>';
     var canvas = document.createElement("canvas");
     canvas.id = "traceCanvas";
     wrap.appendChild(ghost);
@@ -284,10 +332,10 @@
     clearBtn.addEventListener("click", function () { ctx.clearRect(0, 0, canvas.width, canvas.height); });
     doneBtn.addEventListener("click", function () {
       celebrate("🌟");
-      speak("You traced the letter " + L.letter + "! " + L.letter + " is for " + L.word + ".");
+      speak("You traced the letter " + L.letter + "! It is for " + L.word + ".");
     });
 
-    speak("Trace the letter " + L.letter + " with your finger.");
+    speak("Trace the dotted letter " + L.letter + " with your finger.");
   }
 
   // ---------------------------------------------------------------------
@@ -363,7 +411,9 @@
       var badge = wrap.firstChild;
       badge.textContent = N.number;
       if (!quiet) celebrate(N.number === 0 ? "🧺" : "⭐");
-      speak(N.number + ". " + N.name + ". In Twi, " + N.twi + ".");
+      // The numeral is shown on screen; spoken aloud we say its name once (the
+      // digit would be read as the same word, sounding doubled), then the Twi.
+      speak(N.name + ". In Twi, " + N.twi + ".");
       var line = el("div", "meaning");
       line.innerHTML = "This is the number <b>" + N.number + "</b> — " +
         N.name + " (<span class='twi'>" + N.twi + "</span> in Twi).";

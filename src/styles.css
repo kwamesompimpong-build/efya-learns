@@ -150,20 +150,38 @@ h1.title { font-size: clamp(28px, 6vw, 52px); margin: 6px 0; color: var(--pink-6
 .twi { color: var(--green); font-weight: 800; }
 
 /* ---- Trace canvas ---- */
-.trace-wrap { position: relative; width: min(70vw, 360px); height: min(70vw, 360px); }
+/* The white "paper" lives on the wrapper so the dotted guide letter (ghost)
+   shows through; the canvas on top is transparent and only holds her strokes. */
+.trace-wrap {
+  position: relative;
+  width: min(70vw, 360px);
+  height: min(70vw, 360px);
+  background: white;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
 .trace-ghost {
   position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
-  font-size: min(64vw, 320px); font-weight: 900;
-  color: var(--pink-200);
   pointer-events: none;
+}
+.trace-ghost svg { width: 100%; height: 100%; display: block; }
+/* Dotted outline of the letter shape, like a handwriting worksheet. */
+.trace-ghost text {
+  font-family: inherit;
+  font-weight: 900;
+  font-size: 74px;
+  fill: none;
+  stroke: var(--pink-300);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 2 6;
 }
 #traceCanvas {
   position: absolute; inset: 0;
   width: 100%; height: 100%;
-  border-radius: var(--radius);
-  background: white;
-  box-shadow: var(--shadow);
+  background: transparent;
   touch-action: none;
 }
 
