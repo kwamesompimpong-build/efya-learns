@@ -54,6 +54,32 @@ html, body {
   position: relative;
 }
 
+/* Scrollable column for content-heavy screens (Letters, Count) so nothing —
+   including the number/letter quick-pick rows — is ever clipped off-screen.
+   It fills the app box exactly, then scrolls its own contents if they're tall.
+   Top padding leaves room for the floating home/sound buttons. */
+.scroll {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  padding: 80px 10px 28px;
+}
+/* When content is short, center it vertically inside the scroll area. */
+.scroll > .screen-col { margin: auto 0; }
+.screen-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
 /* Kente stripe band used as a decorative accent on screens. */
 .kente {
   height: 14px;
@@ -139,12 +165,12 @@ h1.title { font-size: clamp(28px, 6vw, 52px); margin: 6px 0; color: var(--pink-6
 
 /* ---- Big card for letters / numbers ---- */
 .bigchar {
-  font-size: clamp(120px, 38vw, 300px);
+  font-size: clamp(90px, 26vw, 200px);
   font-weight: 900;
   color: var(--pink-600);
   line-height: 1;
 }
-.emoji-xl { font-size: clamp(70px, 22vw, 160px); line-height: 1; }
+.emoji-xl { font-size: clamp(56px, 16vw, 120px); line-height: 1; }
 .word { font-size: clamp(24px, 6vw, 44px); font-weight: 800; color: var(--ink); }
 .meaning { font-size: clamp(15px, 3.5vw, 22px); opacity: .75; }
 .twi { color: var(--green); font-weight: 800; }
@@ -202,21 +228,21 @@ h1.title { font-size: clamp(28px, 6vw, 52px); margin: 6px 0; color: var(--pink-6
 
 /* ---- Count With Me objects ---- */
 .objects {
-  display: flex; flex-wrap: wrap; gap: 10px;
+  display: flex; flex-wrap: wrap; gap: 8px;
   align-items: center; justify-content: center;
-  max-width: 640px; margin: 4px auto 0;
+  max-width: 560px; margin: 2px auto 0;
 }
 .obj {
-  font-size: clamp(40px, 11vw, 72px);
+  font-size: clamp(30px, 8vw, 56px);
   cursor: pointer;
   transition: transform .12s ease;
   filter: grayscale(0.15) opacity(0.55);
 }
 .obj.counted { filter: none; transform: scale(1.12); }
 .count-badge {
-  font-size: clamp(60px, 16vw, 120px);
+  font-size: clamp(46px, 12vw, 84px);
   font-weight: 900; color: var(--gold);
-  min-height: 1.1em;
+  min-height: 1em; line-height: 1;
 }
 
 /* ---- Dance & Jump ---- */

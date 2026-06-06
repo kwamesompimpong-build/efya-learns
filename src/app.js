@@ -246,12 +246,15 @@
     var data = EFYA.letters;
 
     app.appendChild(backButton());
-    var bigWrap = el("div");
-    app.appendChild(bigWrap);
+    var scroll = el("div", "scroll");
+    var bigWrap = el("div", "screen-col");
+    scroll.appendChild(bigWrap);
+    app.appendChild(scroll);
 
     function show() {
       var L = data[idx];
       bigWrap.innerHTML = "";
+      scroll.scrollTop = 0;
 
       bigWrap.appendChild(el("div", "bigchar", L.letter));
       var emoji = el("div", "emoji-xl", L.emoji);
@@ -415,12 +418,15 @@
     var data = EFYA.numbers;
 
     app.appendChild(backButton());
-    var wrap = el("div");
-    app.appendChild(wrap);
+    var scroll = el("div", "scroll");
+    var wrap = el("div", "screen-col");
+    scroll.appendChild(wrap);
+    app.appendChild(scroll);
 
     function show() {
       var N = data[idx];
       wrap.innerHTML = "";
+      scroll.scrollTop = 0;
       wrap.appendChild(el("div", "count-badge", "")); // filled as she counts
       var badge = wrap.firstChild;
 
