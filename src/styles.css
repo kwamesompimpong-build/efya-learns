@@ -245,6 +245,33 @@ h1.title { font-size: clamp(28px, 6vw, 52px); margin: 6px 0; color: var(--pink-6
   min-height: 1em; line-height: 1;
 }
 
+/* Answer step: tap the matching numeral. Big, distinct from the count objects
+   so it clearly reads as "enter your answer here." */
+.answergrid {
+  display: flex; gap: 16px; flex-wrap: wrap;
+  justify-content: center; margin-top: 6px;
+}
+.answer-num {
+  border: none; cursor: pointer;
+  width: clamp(72px, 20vw, 96px);
+  height: clamp(72px, 20vw, 96px);
+  border-radius: 22px;
+  background: var(--pink-200);
+  color: var(--pink-600);
+  font-weight: 900;
+  font-size: clamp(34px, 10vw, 48px);
+  box-shadow: var(--shadow);
+  transition: transform .1s ease;
+}
+.answer-num:active { transform: scale(0.92); }
+.answer-num.right { background: linear-gradient(160deg, var(--gold), var(--pink-500)); color: white; }
+.answer-num.wrong { background: var(--pink-100); animation: shake .4s; }
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-7px); }
+  75% { transform: translateX(7px); }
+}
+
 /* ---- Dance & Jump ---- */
 .dancer { font-size: clamp(90px, 28vw, 200px); display: inline-block; }
 .dancer.go { animation: bounce .5s ease-in-out infinite; }

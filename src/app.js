@@ -417,6 +417,29 @@
     var idx = startIndex || 0;
     var data = EFYA.numbers;
 
+    function nameOf(n) {
+      for (var k = 0; k < data.length; k++) if (data[k].number === n) return data[k].name;
+      return String(n);
+    }
+    // The correct numeral plus two nearby distractors (0–10), shuffled, so
+    // tapping a number is a real choice she can get right.
+    function buildChoices(correct) {
+      var set = [correct];
+      var guard = 0;
+      while (set.length < 3 && guard++ < 50) {
+        var c = correct + (Math.floor(Math.random() * 5) - 2);
+        if (c < 0 || c > 10 || set.indexOf(c) !== -1) continue;
+        set.push(c);
+      }
+      var fill = 0;
+      while (set.length < 3) { if (set.indexOf(fill) === -1) set.push(fill); fill++; }
+      for (var i = set.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var t = set[i]; set[i] = set[j]; set[j] = t;
+      }
+      return set;
+    }
+
     app.appendChild(backButton());
     var scroll = el("div", "scroll");
     var wrap = el("div", "screen-col");
@@ -427,18 +450,20 @@
       var N = data[idx];
       wrap.innerHTML = "";
       scroll.scrollTop = 0;
-      wrap.appendChild(el("div", "count-badge", "")); // filled as she counts
-      var badge = wrap.firstChild;
+      var counted = 0;
+
+      var badge = el("div", "count-badge", "");
+      wrap.appendChild(badge);
 
       var prompt = el("div", "word",
-        N.number === 0 ? "Zero! An empty " + N.object : "Tap to count the " + N.object);
+        N.number === 0 ? "Zero! An empty " + N.object + "." : "Tap to count the " + N.object);
       wrap.appendChild(prompt);
 
+      // Step 1 — count the real objects (concrete before abstract).
       var objects = el("div", "objects");
-      var counted = 0;
       for (var i = 0; i < N.number; i++) {
         var o = el("div", "obj", N.emoji);
-        (function (node, ordinal) {
+        (function (node) {
           node.addEventListener("click", function () {
             if (node.classList.contains("counted")) return;
             node.classList.add("counted");
@@ -446,56 +471,64 @@
             badge.textContent = counted;
             drumTap();
             speak(String(counted));
-            if (counted === N.number) {
-              setTimeout(function () { reveal(N); }, 500);
-            }
+            if (counted === N.number) setTimeout(askForNumber, 650);
           });
-        })(o, i + 1);
+        })(o);
         objects.appendChild(o);
       }
       wrap.appendChild(objects);
 
-      if (N.number === 0) { badge.textContent = "0"; reveal(N, true); }
-
-      var controls = el("div", "row");
+      // Browse between numbers.
+      var nav = el("div", "row");
       var prev = el("button", "btn round ghost", "◀");
       var next = el("button", "btn round ghost", "▶");
       prev.addEventListener("click", function () { idx = (idx - 1 + data.length) % data.length; chime(); show(); });
       next.addEventListener("click", function () { idx = (idx + 1) % data.length; chime(); show(); });
-      controls.appendChild(prev); controls.appendChild(next);
-      wrap.appendChild(controls);
+      nav.appendChild(prev); nav.appendChild(next);
+      wrap.appendChild(nav);
 
-      // Quick-pick any number 0–10.
-      var grid = el("div", "pickgrid");
-      data.forEach(function (d, i) {
-        var p = el("button", "pick", String(d.number));
-        p.addEventListener("click", function () { idx = i; chime(); show(); });
-        grid.appendChild(p);
-      });
-      wrap.appendChild(grid);
+      // Step 2 — answer area: tap the numeral that matches (filled in below).
+      var answer = el("div", "screen-col");
+      wrap.appendChild(answer);
 
-      speak(N.number === 0
-        ? "Zero. An empty basket. There is nothing to count."
-        : "Let's count the " + N.object + ". Tap each one.");
-    }
+      var answered = false;
+      function askForNumber() {
+        badge.textContent = N.number;
+        prompt.textContent = "Which number is " + N.name + "? Tap it!";
+        speak(N.number === 0
+          ? "This is zero. Which number is zero? Tap it."
+          : "You counted " + N.number + ". Which number is " + N.name + "? Tap it.");
 
-    function reveal(N, quiet) {
-      // Meet the numeral after counting the real objects.
-      var badge = wrap.firstChild;
-      badge.textContent = N.number;
-      var line = el("div", "meaning");
-      line.innerHTML = "This is the number <b>" + N.number + "</b> — " +
-        N.name + " (<span class='twi'>" + N.twi + "</span> in Twi).";
-      wrap.insertBefore(line, wrap.children[2]);
+        answer.innerHTML = "";
+        var grid = el("div", "answergrid");
+        buildChoices(N.number).forEach(function (num) {
+          var b = el("button", "answer-num", String(num));
+          b.addEventListener("click", function () {
+            if (answered) return;
+            if (num === N.number) {
+              answered = true;
+              b.classList.add("right");
+              succeed("Yes! That is the number " + N.number + ", " + N.name +
+                ". In Twi, " + N.twi + ".",
+                function () { idx = (idx + 1) % data.length; show(); }, "⭐");
+            } else {
+              b.classList.add("wrong");
+              speak("That is " + nameOf(num) + ". Try again. Find the number " + N.number + ".");
+              setTimeout(function () { b.classList.remove("wrong"); }, 700);
+            }
+          });
+          grid.appendChild(b);
+        });
+        answer.appendChild(grid);
+      }
 
-      // The quiet path is the zero screen (nothing to count) — just name it.
-      if (quiet) { speak(N.name + ". In Twi, " + N.twi + "."); return; }
-
-      // She counted them all — affirm, then advance to the next number.
-      var nextIdx = (idx + 1) % data.length;
-      succeed("You counted " + N.number + " " + N.object + "! That is " +
-        N.name + ", " + N.twi + " in Twi.",
-        function () { idx = nextIdx; show(); }, "⭐");
+      // Zero has nothing to tap, so go straight to the numeral question.
+      if (N.number === 0) {
+        speak("Zero. An empty basket. There is nothing to count.");
+        setTimeout(askForNumber, 1200);
+      } else {
+        speak("Let's count the " + N.object + ". Tap each one.");
+      }
     }
 
     show();
