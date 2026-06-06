@@ -280,62 +280,103 @@
   // Finger-tracing a letter, Montessori sandpaper-letter style. The letter is a
   // faint ghost behind a canvas; Efya draws over it. There's no fail state —
   // "I traced it!" always celebrates, building independence and confidence.
+  // Build the dotted SVG guide for one glyph. Rendered in a soft, rounded
+  // handwriting font (not a heavy block face) with a dashed outline that
+  // follows the letter's shape — like a preschool tracing worksheet. Lowercase
+  // is drawn a little larger so its body fills the box like the capital does.
+  function traceSvg(glyph, isLower) {
+    var size = isLower ? 78 : 66;
+    return '<svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" aria-hidden="true">' +
+      '<text x="50" y="50" text-anchor="middle" dominant-baseline="central" ' +
+      'style="font-size:' + size + 'px">' + glyph + '</text></svg>';
+  }
+
   function traceLetter(L, returnIdx) {
-    dayMode(); clear();
-    app.appendChild(backButton(function () { letters(returnIdx); }));
-    app.appendChild(el("div", "word", "Trace the letter " + L.letter));
+    dayMode();
+    // Trace the big letter, then its little partner (e.g. A then a), so Efya
+    // connects the two. Each is a separate step on the same canvas.
+    var upper = L.letter, lower = L.letter.toLowerCase();
+    var forms = [
+      { glyph: upper, lower: false, label: "big " + upper, spoken: "the big letter " + upper },
+      { glyph: lower, lower: true, label: "little " + lower, spoken: "the little letter " + lower }
+    ];
+    var step = 0;
+    var stopMouseUp = null; // cleanup for the window mouseup listener between steps
 
-    var wrap = el("div", "trace-wrap");
-    // The guide letter is a dotted outline (like a handwriting worksheet) that
-    // Efya traces over. It's an SVG so the dashes follow the letter's shape.
-    var ghost = el("div", "trace-ghost");
-    ghost.innerHTML =
-      '<svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" aria-hidden="true">' +
-      '<text x="50" y="76" text-anchor="middle">' + L.letter + '</text></svg>';
-    var canvas = document.createElement("canvas");
-    canvas.id = "traceCanvas";
-    wrap.appendChild(ghost);
-    wrap.appendChild(canvas);
-    app.appendChild(wrap);
+    function render() {
+      if (stopMouseUp) stopMouseUp();
+      clear();
+      var f = forms[step];
+      app.appendChild(backButton(function () { if (stopMouseUp) stopMouseUp(); letters(returnIdx); }));
+      app.appendChild(el("div", "word", "Trace the " + f.label));
 
-    var controls = el("div", "row");
-    var clearBtn = el("button", "btn ghost", "↺ Again");
-    var doneBtn = el("button", "btn", "✨ I traced it!");
-    controls.appendChild(clearBtn);
-    controls.appendChild(doneBtn);
-    app.appendChild(controls);
+      // Partner chips: A a, with the current one highlighted.
+      var pair = el("div", "trace-pair");
+      forms.forEach(function (g, i) {
+        var chip = el("span", "trace-chip" + (i === step ? " on" : ""), g.glyph);
+        pair.appendChild(chip);
+      });
+      app.appendChild(pair);
 
-    // Size the canvas to its CSS box for crisp drawing.
-    var rect = wrap.getBoundingClientRect();
-    canvas.width = rect.width; canvas.height = rect.height;
-    var ctx = canvas.getContext("2d");
-    ctx.lineCap = "round"; ctx.lineJoin = "round";
-    ctx.lineWidth = Math.max(14, rect.width * 0.06);
-    ctx.strokeStyle = "#ff5fa2";
+      var wrap = el("div", "trace-wrap");
+      var ghost = el("div", "trace-ghost");
+      ghost.innerHTML = traceSvg(f.glyph, f.lower);
+      var canvas = document.createElement("canvas");
+      canvas.id = "traceCanvas";
+      wrap.appendChild(ghost);
+      wrap.appendChild(canvas);
+      app.appendChild(wrap);
 
-    var drawing = false;
-    function pos(e) {
-      var r = canvas.getBoundingClientRect();
-      var pt = e.touches ? e.touches[0] : e;
-      return { x: pt.clientX - r.left, y: pt.clientY - r.top };
+      var last = step === forms.length - 1;
+      var controls = el("div", "row");
+      var clearBtn = el("button", "btn ghost", "↺ Again");
+      var doneBtn = el("button", "btn", last ? "✨ I traced it!" : "Next ▶");
+      controls.appendChild(clearBtn);
+      controls.appendChild(doneBtn);
+      app.appendChild(controls);
+
+      // Size the canvas to its CSS box for crisp drawing.
+      var rect = wrap.getBoundingClientRect();
+      canvas.width = rect.width; canvas.height = rect.height;
+      var ctx = canvas.getContext("2d");
+      ctx.lineCap = "round"; ctx.lineJoin = "round";
+      ctx.lineWidth = Math.max(14, rect.width * 0.06);
+      ctx.strokeStyle = "#ff5fa2";
+
+      var drawing = false;
+      function pos(e) {
+        var r = canvas.getBoundingClientRect();
+        var pt = e.touches ? e.touches[0] : e;
+        return { x: pt.clientX - r.left, y: pt.clientY - r.top };
+      }
+      function startStroke(e) { drawing = true; var p = pos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); e.preventDefault(); }
+      function moveStroke(e) { if (!drawing) return; var p = pos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); e.preventDefault(); }
+      function endStroke() { drawing = false; }
+      canvas.addEventListener("mousedown", startStroke);
+      canvas.addEventListener("mousemove", moveStroke);
+      window.addEventListener("mouseup", endStroke);
+      stopMouseUp = function () { window.removeEventListener("mouseup", endStroke); stopMouseUp = null; };
+      canvas.addEventListener("touchstart", startStroke, { passive: false });
+      canvas.addEventListener("touchmove", moveStroke, { passive: false });
+      canvas.addEventListener("touchend", endStroke);
+
+      clearBtn.addEventListener("click", function () { ctx.clearRect(0, 0, canvas.width, canvas.height); });
+      doneBtn.addEventListener("click", function () {
+        if (!last) {
+          chime();
+          step++;
+          render();
+          return;
+        }
+        celebrate("🌟");
+        speak("You traced the big " + upper + " and the little " + lower +
+          "! " + upper + " is for " + L.word + ".");
+      });
+
+      speak("Trace " + f.spoken + " with your finger.");
     }
-    function start(e) { drawing = true; var p = pos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); e.preventDefault(); }
-    function move(e) { if (!drawing) return; var p = pos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); e.preventDefault(); }
-    function end() { drawing = false; }
-    canvas.addEventListener("mousedown", start);
-    canvas.addEventListener("mousemove", move);
-    window.addEventListener("mouseup", end);
-    canvas.addEventListener("touchstart", start, { passive: false });
-    canvas.addEventListener("touchmove", move, { passive: false });
-    canvas.addEventListener("touchend", end);
 
-    clearBtn.addEventListener("click", function () { ctx.clearRect(0, 0, canvas.width, canvas.height); });
-    doneBtn.addEventListener("click", function () {
-      celebrate("🌟");
-      speak("You traced the letter " + L.letter + "! It is for " + L.word + ".");
-    });
-
-    speak("Trace the dotted letter " + L.letter + " with your finger.");
+    render();
   }
 
   // ---------------------------------------------------------------------
