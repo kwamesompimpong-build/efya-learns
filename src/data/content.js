@@ -9,6 +9,11 @@
  *
  * Emoji stand in for art so the whole experience works with zero asset files.
  * Real Adinkra/kente artwork can replace these later without touching app.js.
+ *
+ * guide.clips lists OPTIONAL pre-rendered HeyGen video clips of the guide,
+ * "Auntie Akosua". If a clip file exists under guide.clipsPath it plays in a
+ * small bubble; if not (the normal case), guide.js speaks the clip's `text`
+ * via TTS instead. The app never requires the videos to be present.
  */
 window.EFYA = {
   // Akan/Twi greeting shown on the home screen. "Akwaaba" = welcome.
@@ -60,6 +65,31 @@ window.EFYA = {
     { number: 9, name: "nine", twi: "nkron", object: "shells", emoji: "🐚" },
     { number: 10, name: "ten", twi: "du", object: "stars", emoji: "⭐" }
   ],
+
+  // The order new plants sprout in the Learning Garden — what nextUp() serves.
+  // E-F-Y-A first: she learns her own name's letters before anything else.
+  // (Display order everywhere stays A–Z / 0–10; this only drives what's NEXT.)
+  learnOrder: {
+    letters: ["E", "F", "Y", "A", "S", "M", "T", "C", "P", "N", "I", "D", "G",
+              "O", "B", "H", "R", "U", "L", "W", "J", "K", "Q", "V", "X", "Z"],
+    numbers: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0]
+  },
+
+  // Auntie Akosua, the guide. Clips are optional pre-rendered HeyGen videos
+  // (relative to src/); each falls back to its `text` spoken via TTS.
+  guide: {
+    name: "Auntie Akosua",
+    emoji: "🌺",
+    clipsPath: "assets/guide/",
+    clips: {
+      welcome: { file: "welcome.mp4", text: "Akwaaba, Efya! Let's learn and grow today!" },
+      praise1: { file: "praise1.mp4", text: "Ayekoo! Well done!" },
+      praise2: { file: "praise2.mp4", text: "Wonderful! You did it!" },
+      praise3: { file: "praise3.mp4", text: "I am so proud of you!" },
+      bloom: { file: "bloom.mp4", text: "Your flower bloomed! You are growing so big!" },
+      goodnight: { file: "goodnight.mp4", text: "Good night, brave girl. Da yie. Sleep well in your own cozy bed." }
+    }
+  },
 
   // Dreamland — the bedtime feature that gently encourages Efya to sleep in her
   // own bed all night. Built on positive reinforcement (a morning star chart),
